@@ -1,0 +1,14 @@
+### Create a note
+POST http://localhost:8877/api/data
+Content-Type: application/json
+
+{
+  "name": "cdy",
+  "content": "testing API is crucial",
+  "important": true
+}
+
+### get all data
+
+GET http://localhost:8877/api/data
+Content-Type: application/json

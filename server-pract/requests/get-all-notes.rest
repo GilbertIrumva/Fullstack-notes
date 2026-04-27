@@ -1,0 +1,16 @@
+
+### Get all notes
+GET http://localhost:3001/api/notes
+
+
+### Update a note (PATCH)
+PATCH http://localhost:3001/api/notes/1
+Content-Type: application/json
+
+### Replace a note (PUT)
+GET  http://localhost:8888/api/notes
+Content-Type: application/json
+
+### Delete a note
+DELETE http://localhost:8888/api/notes/4
+Content-Type: application/json
