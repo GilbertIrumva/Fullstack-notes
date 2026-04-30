@@ -1,33 +1,21 @@
-import axios from 'axios'
+import { useEffect, useState } from "react"
+import notesService from "./services/notes"
 
-const baseUrl = 'https://your-app.onrender.com/api/notes'
+function App() {
+  const [notes, setNotes] = useState([])
 
-// GET all
-const getAll = async () => {
-  const res = await axios.get(baseUrl)
-  return res.data
+  useEffect(() => {
+    notesService.getAll().then(data => {
+      setNotes(data)
+    })
+  }, [])
+
+  return (
+    <div>
+      <h1>Notes</h1>
+      {notes.map(note => (<div key={note.id}>{note.content} </div>))}
+    </div>
+  )
 }
 
-// CREATE
-const create = async (newVisitor) => {
-  const res = await axios.post(baseUrl, newNote)
-  return res.data
-}
-
-// UPDATE
-const update = async (id, updatedVisitor) => {
-  const res = await axios.put(`${baseUrl}/${id}`, updatedNote)
-  return res.data
-}
-
-// DELETE
-const remove = async (id) => {
-  await axios.delete(`${baseUrl}/${id}`)
-}
-
-export default {
-  getAll,
-  create,
-  update,
-  remove
-}
+export default App

@@ -1,88 +1,250 @@
+
 const express = require('express')
 const app = express()
+const cors = require('cors')
+ 
+
 
 app.use(express.json())
+app.use(cors())
 
-let notes = [
-  { id: 1, name: "king", arrived: false, gender: "male" },
-  { id: 2, name: "queen", arrived: false, gender: "female" },
-  { id: 3, name: "prince", arrived: false, gender: "male" },
-  { id: 4, name: "princess", arrived: false, gender: "female" },
-  { id: 5, name: "guard", arrived: true, gender: "female" },
-  { id: 6, name: "ian", arrived: true, gender: "female" },
-  { id: 7, name: "alan", arrived: true, gender: "male" },
-  { id: 8, name: "general", arrived: true, gender: "male" }
+
+ let notes = [
+    {
+    id: "1",
+    content: "HTML is easy",
+    important: true
+  },
+  {
+    id: "2",
+    content: "Browser can execute only JavaScript",
+    important: false
+  },
+  {
+    id: "3",
+    content: "GET and POST are the most important methods of HTTP protocol",
+    important: true
+  }
 ]
 
-// GET all
-app.get('/api/notes', (req, res) => {
+app.get('/',(req, res)=>{
+ res.send('<h1>Welcome to my sever</h1>')
+})
+
+app.get('/api/notes', (req,res)=>{
   res.json(notes)
 })
 
-// GET by id
-app.get('/api/notes/:id', (req, res) => {
+app.get('/api/notes/id/:id', (req, res )=>{
   const id = Number(req.params.id)
-  const visitor = notes.find(v => v.id === id)
 
-  if (!visitor) return res.status(404).json({ error: 'not found' })
-  res.json(visitor)
+  const ids = notes.find(n => n.id === id)
+  if (!ids) res.json({error: 'not found'})
+    res.json(ids)
+  
+})
+app.get('/api/notes/name/:name', (req, res )=>{
+  const name = req.params.name.toLowerCase()
+
+  const nms = notes.find(ns => ns.name === name)
+    if(!nms) res.json({error: 'name not exist'})
+    res.json(nms)
 })
 
-// FILTER by gender
-app.get('/api/notes/gender/:gender', (req, res) => {
-  const gender = req.params.gender.toLowerCase()
-  const result = notes.filter(v => v.gender.toLowerCase() === gender)
-
-  if (result.length === 0) return res.status(404).json({ error: 'not found' })
-  res.json(result)
-})
-
-// FILTER by arrived
 app.get('/api/notes/arrived/:value', (req, res) => {
-  const value = req.params.value === "true"
-  const result = notes.filter(v => v.arrived === value)
+  const value = req.params.value == "true"
 
-  if (result.length === 0) return res.status(404).json({ error: 'none found' })
-  res.json(result)
+  const vals = notes.filter(vl => vl.arrived === value )
+  if (!vals) res.json({ error: 'no info' })
+  res.json(vals)
 })
 
-// CREATE
-app.post('/api/notes', (req, res) => {
-  const body = req.body
+app.get('/api/notes/gender/:gender', (req, res )=>{
+ const genda = req.params.gender
+ const alg = notes.filter(a => a.gender === genda)
+  if (!alg) res.json({ error: 'no info' })
 
-  const newVisitor = {
-    id: notes.length + 1,
-    name: body.name,
-    arrived: body.arrived || false,
-    gender: body.gender
+ res.json(alg)
+})
+
+app.delete('/api/notes/id/:id', (req, res)=>{
+    const id = Number(req.params.id)
+
+    const note = notes.find(n => n.id === id)
+
+    if (!note) res.json({error: 'delete unsuccessfull '})
+      notes = notes.filter(n => n.id !== id)
+    return res.json({message: 'delete successfull'})
+})
+
+app.put('/api/notes/id/:id', (req, res) => {
+  const body = req.body
+  const id = Number(req.params.id)
+
+  const note = notes.find(n => n.id === id)
+
+  if (!note) {
+    return res.json({ error: 'item not found' })
   }
 
-  notes = notes.concat(newVisitor)
-  res.status(201).json(newVisitor)
-})
+  const updated = { ...note, ...body }
 
-// UPDATE
-app.put('/api/notes/:id', (req, res) => {
-  const id = Number(req.params.id)
-  const body = req.body
+  notes = notes.map(n => n.id === id ? updated : n)
 
-  notes = notes.map(v =>
-    v.id === id ? { ...v, ...body } : v
-  )
-
-  const updated = notes.find(v => v.id === id)
   res.json(updated)
 })
 
-// DELETE
-app.delete('/api/notes/:id', (req, res) => {
-  const id = Number(req.params.id)
-  notes = notes.filter(v => v.id !== id)
+app.post('/api/notes/', (req,res)=>{
+  const body = req.body
 
-  res.status(204).end()
+  const generateId = () =>{
+    const maxId = notes.length > 0
+    ? Math.max(...notes.map(n => Number(n.id)))
+    : 0
+    return maxId + 1
+  }
+  
+  const newNote = {
+    id: generateId(),  
+    name: body.name,
+    gender: body.gender,
+    arrived: body.arrived || false
+  }
+  notes = notes.concat(newNote)
+  res.json(notes)
 })
 
-const PORT = process.env.PORT || 8888
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

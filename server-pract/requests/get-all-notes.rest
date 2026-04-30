@@ -1,16 +1,39 @@
 
 ### Get all notes
 GET http://localhost:3001/api/notes
-
+Content-Type: application/json
 
 ### Update a note (PATCH)
-PATCH http://localhost:3001/api/notes/1
+PATCH http://localhost:3001/api/notes/value/1
 Content-Type: application/json
+
+{
+    "name": "frano",
+    "gender": "male"
+}
 
 ### Replace a note (PUT)
-GET  http://localhost:8888/api/notes
+PUT  http://localhost:3001/api/notes/id/6
 Content-Type: application/json
 
+{
+      
+    "name": "ian",
+    "arrived": false,
+    "gender": "male"
+    }
+
+
 ### Delete a note
-DELETE http://localhost:8888/api/notes/4
+DELETE http://localhost:3001/api/notes/id/8
 Content-Type: application/json
+
+###
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+
+{
+    "name": "cedy",
+    "arrived": true,
+    "gender": "male"
+}
