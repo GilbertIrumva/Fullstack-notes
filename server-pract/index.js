@@ -46,7 +46,8 @@ app.delete('/api/notes/:id', (request, response) => {
   response.status(204).end()
 })
 
-app.get('*', (req, res) => {
+app.use((req, res, next) => {
+  if (req.path.startsWith('/api')) return next()
   res.sendFile(path.join(__dirname, 'dist', 'index.html'))
 })
 
