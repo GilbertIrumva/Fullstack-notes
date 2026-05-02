@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react'
 import Footer from './components/Footer'
 import Note from './components/Note'
 import Notification from './components/Notification'
-import noteService from './services/notes'
+/* import noteService  from './services/Notes /' */
+import {getAll,update,create} from './services/Notes'
 
 const App = () => {
   const [notes, setNotes] = useState([])
@@ -11,7 +12,7 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
-    noteService.getAll().then(initialNotes => {
+    getAll().then(initialNotes => {
       setNotes(initialNotes)
     })
   }, [])
@@ -33,8 +34,8 @@ const App = () => {
     const note = notes.find(n => n.id === id)
     const changedNote = { ...note, important: !note.important }
 
-    noteService
-      .update(id, changedNote)
+    
+      update(id, changedNote)
       .then(returnedNote => {
         setNotes(notes.map(note => (note.id !== id ? note : returnedNote)))
       })
