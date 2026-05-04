@@ -32,7 +32,7 @@ app.use(express.static('dist'))
 app.use(express.json())
 
 
-app.get('/notes', (request, response) => {
+app.get('/api/notes', (request, response) => {
   response.json(notes)
 })
 
@@ -78,6 +78,20 @@ app.delete('/api/notes/:id', (request, response) => {
   notes = notes.filter((note) => note.id !== id)
 
   response.status(204).end()
+})
+
+app.put('/api/notes/:id', (request, response) => {
+  const id = request.params.id
+  const body = request.body
+
+  notes = notes.map((note) => (note.id !== id ? note : { ...note, ...body, id }))
+
+  const updatedNote = notes.find((note) => note.id === id)
+  if (updatedNote) {
+    response.json(updatedNote)
+  } else {
+    response.status(404).end()
+  }
 })
 
 const unknownEndpoint = (request, response) => {
