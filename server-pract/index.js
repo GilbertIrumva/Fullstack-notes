@@ -35,7 +35,7 @@ app.use(express.json())
 //   response.send('<h1>Hello World!</h1>')
 // })
 
-app.get('/api/notes', (request, response) => {
+app.get('/notes', (request, response) => {
   response.json(notes)
 })
 
